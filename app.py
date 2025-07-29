@@ -52,7 +52,7 @@ def save_usage_log(log):
 
 def get_user_id():
     if "user_id" not in st.session_state:
-        st.session_state.user_id = str(st.experimental_user().id)
+        st.session_state.user_id = str(st.experimental_user.id)
     return st.session_state.user_id
 
 def check_usage_limit(user_id, log):
