@@ -8,9 +8,6 @@ from datetime import date
 import json
 from langchain_groq import ChatGroq
 
-# -------------- CONFIGURATION ---------------
-ARTICLE_CAP = 2
-USAGE_LOG = "user_usage_log.json"
 
 # -------------- LLM INITIALIZATION ----------
 if "GROQ_API_KEY" not in st.secrets:
@@ -38,40 +35,6 @@ def fetch_article_from_url(url: str) -> str | None:
         return article_text.strip()
     except:
         return None
-
-# -------------- USAGE TRACKING ----------------
-def load_usage_log():
-    if os.path.exists(USAGE_LOG):
-        with open(USAGE_LOG, "r") as f:
-            return json.load(f)
-    return {}
-
-def save_usage_log(log):
-    with open(USAGE_LOG, "w") as f:
-        json.dump(log, f)
-
-def get_user_id():
-    if "user_id" not in st.session_state:
-        user = st.user
-        if user and user.email:
-            st.session_state.user_id = user.email
-        elif user and user.username:
-            st.session_state.user_id = user.username
-        else:
-            st.session_state.user_id = "anonymous"
-    return st.session_state.user_id
-
-def check_usage_limit(user_id, log):
-    today = str(date.today())
-    user_log = log.get(user_id, {})
-    return user_log.get(today, 0)
-
-def increment_usage(user_id, log):
-    today = str(date.today())
-    if user_id not in log:
-        log[user_id] = {}
-    log[user_id][today] = log[user_id].get(today, 0) + 1
-    save_usage_log(log)
 
 # -------------- LLM CHAIN LOGIC -------------
 def summarize_article(article_text, llm):
@@ -104,10 +67,6 @@ def main():
     usage_log = load_usage_log()
     count = check_usage_limit(user_id, usage_log)
 
-    if count >= ARTICLE_CAP:
-        st.error("🚫 Daily article limit reached. Try again tomorrow.")
-        st.stop()
-
     url = st.text_input("Paste the article URL:")
 
     if st.button("Summarize Article"):
@@ -130,8 +89,7 @@ def main():
         st.subheader("📌 Bullet Points")
         st.markdown(result["bullet_points"])
 
-        increment_usage(user_id, usage_log)
-        st.success("✅ Done! This counts toward your daily quota.")
+        st.success("✅ Done! Your summary is ready!")
 
 if __name__ == "__main__":
     main()
