@@ -16,7 +16,7 @@ if "GROQ_API_KEY" not in st.secrets:
 
 llm = ChatGroq(
     model_name="llama3-8b-8192",
-    temperature=0.3,
+    temperature=0.4,
     api_key=st.secrets["GROQ_API_KEY"]
 )
 
