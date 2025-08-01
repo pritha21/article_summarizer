@@ -63,9 +63,6 @@ def summarize_article(article_text, llm):
 # -------------- STREAMLIT UI ----------------
 def main():
     st.title("🧠 Article Summarizer")
-    user_id = get_user_id()
-    usage_log = load_usage_log()
-    count = check_usage_limit(user_id, usage_log)
 
     url = st.text_input("Paste the article URL:")
 
