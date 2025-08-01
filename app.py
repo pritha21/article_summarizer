@@ -40,7 +40,7 @@ def fetch_article_from_url(url: str) -> str | None:
 def summarize_article(article_text, llm):
     research_prompt = f"""
     You are an analytical assistant. Read the article below and extract the key ideas as concise bullet points.
-    Be objective, avoid redundancy, and start each bullet with '-'.
+    Be objective, avoid redundancy and don't miss out details.
     ARTICLE:
     {article_text.strip()}
     """
